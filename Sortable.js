@@ -1322,6 +1322,11 @@
 
       if (originalTarget.isContentEditable) {
         return;
+      } // Safari ignores further event handling after mousedown
+
+
+      if (!this.nativeDraggable && Safari && target && target.tagName.toUpperCase() === 'SELECT') {
+        return;
       }
 
       target = closest(target, options.draggable, el, false);
@@ -2433,7 +2438,7 @@
         pluginEvent('showClone', this);
         if (Sortable.eventCanceled) return; // show clone at dragEl or original position
 
-        if (rootEl.contains(dragEl) && !this.options.group.revertClone) {
+        if (dragEl.parentNode == rootEl && !this.options.group.revertClone) {
           rootEl.insertBefore(cloneEl, dragEl);
         } else if (nextEl) {
           rootEl.insertBefore(cloneEl, nextEl);
@@ -2788,7 +2793,7 @@
             return;
           }
 
-          autoScroll(evt, this.options, getParentAutoScrollElement(elem, false), false);
+          autoScroll(evt, this.options, getParentAutoScrollElement(elem, true), false);
         }
       }
     };
